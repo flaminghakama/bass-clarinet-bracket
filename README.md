@@ -17,5 +17,7 @@ Clamp height (relative to hardware origin)
 Clamp angle (intersection with Y-axis)
 Clamp distance
 
+Clip on profile points
+
 ## Design Parameters
 
