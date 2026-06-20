@@ -30,11 +30,12 @@ cap_extent = 4;
 space_extent = 30;
 transition_extent = 40; 
 
-tilter_radius = logo_width/2;     
-tooth_radius = 0.6;          
-tooth_tolerance = 0.2;
-tooth_depth = 2.2;      
-teeth = 30;           
+tilter_radius = logo_width/2;  
+teeth_placement = 0.69;  
+tooth_radius = 0.8;          
+tooth_tolerance = 0.4;
+tooth_depth = 2.4;      
+teeth = 21;           
 joint_extent = tilter_radius * 2;
 
 bolt_diameter = 3.7;
@@ -127,7 +128,7 @@ module bottom_tilter(radius=tilter_radius, height=logo_height) {
         
         for (i = [0 : 360/teeth : 360]) {
             rotate([0, 0, i])
-            translate([radius * 0.6, 0, (height/2)-1])
+            translate([radius * teeth_placement, 0, (height/2)-1])
             cylinder(r1=tooth_radius + tooth_tolerance, r2=tooth_tolerance, h=tooth_depth + tooth_tolerance);
         }
     }
