@@ -30,14 +30,14 @@ cap_extent = 4;
 space_extent = 30;
 transition_extent = 40; 
 
-tilter_radius = logo_width/2 * 1;     
-tooth_radius = 1.4;          
+tilter_radius = logo_width/2;     
+tooth_radius = 0.6;          
 tooth_tolerance = 0.2;
-tooth_depth = 3;      
-teeth = 24;           
-bolt_diameter = 6;
+tooth_depth = 2.2;      
+teeth = 30;           
 joint_extent = tilter_radius * 2;
 
+bolt_diameter = 3.7;
 nut_diameter = 8.8;
 nut_height = 2.7;
 
@@ -176,7 +176,7 @@ module joint_bottom() {
                 }
             }
         outside_stencil();
-        bottom_tilter(tilter_radius, logo_height);
+        bottom_tilter();
         nut_stencil();
     }
 }
