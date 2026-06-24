@@ -1,7 +1,7 @@
 use <MCAD/boxes.scad>
-// $fa = 1;
-// $fs = 0.4;
-// $fn = 100;
+$fa = 1;
+$fs = 0.4;
+$fn = 100;
 
 // The bass clarinet hardware
 hw_height = 42.5;
@@ -30,48 +30,50 @@ hw_ring_offset = hw_ring_crossover - hw_ring_cross_OD_YZ;
 //  Outside radius
 hw_ring_overall_radius = hw_ring_radius + hw_ring_cross_OD_YZ/2;
 
-module hardware() {
+verticalShift = (hw_ring_overall_radius*2 - hw_ring_cross_OD_YZ) + hw_ring_offset;
 
+module oval(space) {
+    rotate([0, 180, 90])
+    scale([hw_ring_cross_OD_X + space*2, hw_ring_cross_OD_YZ + space*2]) { 
+        circle(r = 1/2);
+    }
+}
 
-    //  Plate
+module ring(space=0) {
+    rotate([0, 90, 0])
+    rotate_extrude(angle=360) {
+        translate([hw_ring_radius, 0])
+        oval(space);
+    }
+}
+
+module rings() {
+
+    translate([0, 0, hw_ring_overall_radius])
+    ring();
+
+    translate([0, 0, hw_ring_overall_radius + verticalShift])
+    ring();
+
+    translate([0, 0, hw_ring_overall_radius + verticalShift*2])
+    ring();
+}
+
+module plate(space=0) {
     translate([0, 0, hw_plate_height/2 + (hw_height - hw_plate_height)/2])
     rotate([90, 0, 0]) {
-        linear_extrude(height = hw_plate_thickness) {
-            scale([hw_plate_width, hw_plate_height]) { 
+        linear_extrude(height = hw_plate_thickness + space) {
+            scale([hw_plate_width + space*2, hw_plate_height + space*2]) { 
                 circle(r = 1/2);
             }
         }
     }
+}
 
-    //  Rings
-    
-    module ring() {
-        rotate([0, 90, 0])
-        rotate_extrude(angle=360) {
-            translate([hw_ring_radius, 0])
-            rotate([0, 180, 90])
-            scale([hw_ring_cross_OD_X, hw_ring_cross_OD_YZ]) { 
-                circle(r = 1/2);
-            }
-        }
-    }
-
-    module rings() {
-
-        verticalShift = (hw_ring_overall_radius*2 - hw_ring_cross_OD_YZ) + hw_ring_offset;
-
-        translate([0, 0, hw_ring_overall_radius])
-        ring();
-
-        translate([0, 0, hw_ring_overall_radius + verticalShift])
-        ring();
-
-        translate([0, 0, hw_ring_overall_radius + verticalShift*2])
-        ring();
-    }
-
+module hardware() {
+    plate();
     translate([0, -hw_depth/2, 0])
     rings();
 }
 
-//hardware();
+// hardware();

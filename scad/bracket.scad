@@ -1,11 +1,7 @@
 use <MCAD/boxes.scad>
-$fa = 1;
-$fs = 0.4;
-$fn = 100;
-
 include <hardware.scad>
 
-// filespec = "../svg/altjazzark-logo-outline.svg";
+filespec = "../svg/altjazzark-logo-outline.svg";
 
 // The bass clarinet
 inst_diameter = 41.0;
@@ -26,8 +22,46 @@ color("grey") {
     hardware();
 }   
 
+module bracket_inside_space() {
 
-// //  The bracket 
+    space = 0.2;
+
+    // Plate
+    translate([0, inst_radius*-1, 0])
+    plate(space);
+
+    //  top ring
+    translate([0, inst_radius*-1 -hw_depth/2, hw_ring_overall_radius + verticalShift*2])
+    ring(space);
+
+    //  cylinder to fill up inside of top ring
+    cyl_fill_radius = hw_ring_ID/2 + (hw_ring_OD - hw_ring_ID)/4;
+    top_ring_center_height = hw_ring_overall_radius + verticalShift*2;
+    translate([-hw_width/2, inst_radius*-1 -hw_depth/2, hw_ring_overall_radius + verticalShift*2])
+    rotate([0, 90, 0])
+    cylinder(r = cyl_fill_radius, h = hw_width + space*2);
+
+    //  profile of cross section of ring filled in
+    linear_extrude(height=hw_ring_overall_radius + verticalShift*2)
+        translate([0, inst_radius*-1 -hw_depth/2, 0])
+        hull() {
+            translate([0, -cyl_fill_radius, 0]) {
+                rotate([0, 0, 90])
+                oval(space);
+            }
+            translate([0, cyl_fill_radius, 0]) {
+                rotate([0, 0, 90])
+                oval(space);
+            }
+        }        
+}
+
+color("white") { 
+    bracket_inside_space();
+}   
+
+
+//  The bracket 
 logo_aspect = 1227.8/610.6;
 logo_height = 14; // 610.6
 logo_width = 14 * logo_aspect;
@@ -37,12 +71,12 @@ side_tilt = -22.5;
 forward_tilt = 10;
 arc = 360;
 
-// cover_width = 400;
-// cover_height = 2200;
-// cover_depth = 600;
-// cover_radius = 50;
-// cover_translate = cover_height/2;
-
+cover_thickness = 3;
+cover_width = 20;
+cover_height = hw_height + cover_thickness*2;
+cover_depth = hw_depth + cover_thickness;
+cover_radius = 2.5;
+cover_translate = cover_height/2;
 
 // module wheel(w, h, yTrans, zTrans, xTilt, zTilt, arc, xTrans) {
 //     translate([0, yTrans, zTrans])
