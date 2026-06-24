@@ -1,19 +1,39 @@
 use <MCAD/boxes.scad>
+include <../lib/BOSL2/std.scad>
 include <hardware.scad>
 
 filespec = "../svg/altjazzark-logo-outline.svg";
+
+// Quick Release
+// https://www.thingiverse.com/thing:2458429
 
 // The bass clarinet
 inst_diameter = 41.0;
 inst_radius = inst_diameter/2;
 inst_height = 240;
-inst_key_distance_max = 78.0 - inst_radius;
-inst_key_distance_min = 58.9 - inst_radius;
+key_distance_max = 78.0 - inst_radius;
+key_distance_min = 58.9 - inst_radius;
+key_angle = 35;
 
-color("brown") { 
+module instrument() {
     translate([0, 0, -inst_height/2])
         linear_extrude(height=inst_height)
             circle(inst_diameter/2);
+}
+module keys() { 
+    translate([0, 0, -inst_height/4])
+    rotate([0, 0, 135])
+    pie_slice(ang = key_angle, r = key_distance_min, h = inst_height/2);
+
+    translate([0, 0, 0])
+    rotate([0, 0, 135])
+    pie_slice(ang = key_angle, r = key_distance_max, h = inst_height/2);
+}
+color("brown") { 
+    instrument();
+}   
+color("grey") { 
+    keys();
 }   
 
 //  The hardware
@@ -37,7 +57,7 @@ module bracket_inside_space() {
     //  cylinder to fill up inside of top ring
     cyl_fill_radius = hw_ring_ID/2 + (hw_ring_OD - hw_ring_ID)/4;
     top_ring_center_height = hw_ring_overall_radius + verticalShift*2;
-    translate([-hw_width/2, inst_radius*-1 -hw_depth/2, hw_ring_overall_radius + verticalShift*2])
+    translate([-hw_width/2 - space, inst_radius*-1 -hw_depth/2, hw_ring_overall_radius + verticalShift*2])
     rotate([0, 90, 0])
     cylinder(r = cyl_fill_radius, h = hw_width + space*2);
 
@@ -57,7 +77,7 @@ module bracket_inside_space() {
 }
 
 color("white") { 
-    bracket_inside_space();
+    //bracket_inside_space();
 }   
 
 
@@ -78,37 +98,40 @@ cover_depth = hw_depth + cover_thickness;
 cover_radius = 2.5;
 cover_translate = cover_height/2;
 
-// module wheel(w, h, yTrans, zTrans, xTilt, zTilt, arc, xTrans) {
-//     translate([0, yTrans, zTrans])
-//         rotate([xTilt, 0, zTilt]) 
-//             rotate_extrude(angle=arc) {
-//                 translate([xTrans, 0])
-//                 rotate([0, 180, 90])
-//                 resize([w, h])
-//                 import(filespec, center = true, $fn = 100);
-//             };
-// }
+module wheel(w, h, yTrans, zTrans, xTilt, zTilt, arc, xTrans) {
+    translate([0, yTrans, zTrans])
+        rotate([xTilt, 0, zTilt]) 
+            rotate_extrude(angle=arc) {
+                translate([xTrans, 0])
+                rotate([0, 180, 90])
+                resize([w, h])
+                import(filespec, center = true, $fn = 100);
+            };
+}
 
-// color("yellow") { 
+color("yellow") { 
 
     
-//     difference() {
-//         wheel( 
-//             logo_width, 
-//             logo_height, 
-//             (wheel_radius * cos(forward_tilt)) - (inst_radius + cover_depth), 
-//             hw_height*0.25, 
-//             side_tilt, 
-//             forward_tilt, 
-//             arc, 
-//             wheel_radius
-//         );
+    difference() {
+        wheel( 
+            logo_width, 
+            logo_height, 
+            (wheel_radius * cos(forward_tilt)) - (inst_radius + cover_depth), 
+            hw_height*0.25, 
+            side_tilt, 
+            forward_tilt, 
+            arc, 
+            wheel_radius
+        );
 
-//         translate([0, -wheel_radius, -hw_height*0.5])
-//             cube([wheel_radius*1.2, wheel_radius*2.6, hw_height*1.8]);
-//     }
+        translate([0, -wheel_radius, -hw_height*0.5])
+            cube([wheel_radius*1.2, wheel_radius*2.6, hw_height*1.8]);
+    }
     
     
-//     translate([0, -(inst_radius + cover_depth/2), cover_translate])
-//         roundedBox(size=[cover_width, cover_depth, cover_height],radius=cover_radius,sidesonly=false);
-// }
+    difference() {
+        translate([0, -(inst_radius + cover_depth/2), cover_translate])
+            roundedBox(size=[cover_width, cover_depth, cover_height],radius=cover_radius,sidesonly=false);
+        bracket_inside_space();
+    }
+}
