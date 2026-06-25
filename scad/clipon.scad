@@ -1,17 +1,10 @@
 include <../lib/BOSL2/std.scad>
-
-$fa = 1;
-$fs = 0.4;
-$fn = 100;
-
-kis = 0.02;
-kiss = kis * 2;
+include <hardware.scad>
 
 //  The part of the clip on that attaches to our bracket, not part of our model
 // * Clip on bottom clamp max height = 12.4
 // * Clip on bottom clamp min height = 3.4
 // * Clip on width = 12.3
-
 
 filespec = "../svg/altjazzark-logo-outline.svg";
 logo_aspect = 1227.8/610.6;
@@ -34,13 +27,15 @@ tilter_radius = logo_width/2;
 teeth_placement = 0.69;  
 tooth_radius = 0.8;          
 tooth_tolerance = 0.4;
-tooth_depth = 2.4;      
+tooth_depth = 2.0;      
 teeth = 21;           
 joint_extent = tilter_radius * 2;
 
 bolt_diameter = 3.7;
 nut_diameter = 8.8;
 nut_height = 2.7;
+bolt_head_OD = 6.3;
+bolt_head_height = 3.5;
 
 //  Just a design element to keep the end rounded
 module end_cap() {
@@ -190,5 +185,5 @@ module clipon() {
     transition();
     joint_bottom();
 }
-clipon();
+//clipon();
 

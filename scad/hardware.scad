@@ -3,7 +3,10 @@ $fa = 1;
 $fs = 0.4;
 $fn = 100;
 
-// The bass clarinet hardware
+kis = 0.02;
+kiss = kis * 2;
+
+// The hardware on the bass clarinet we are attaching to
 hw_height = 42.5;
 hw_width = 2.9;
 hw_depth = 15.5;
