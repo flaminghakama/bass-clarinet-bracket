@@ -60,9 +60,9 @@ color("brown") {
 
 //  The hardware
 color("grey") { 
-    //keys();
-    //translate([0, inst_radius*-1, 0])
-    //hardware();
+    keys();
+    translate([0, inst_radius*-1, 0])
+    hardware();
 }   
 
 
@@ -232,7 +232,7 @@ color("yellow") {
     my_top_joint();
 
 
-    translate([-40, 118, -60])
+    translate([-34, 115, -66])
     rotate([0, 0, -15])
     clipon();
 }
